@@ -13,7 +13,8 @@ import { useState } from 'react';
 import { translations, type Language } from './i18n';
 
 export default function App() {
-  const [activeCategory, setActiveCategory] = useState<'All' | '3D' | 'Motion' | 'UI' | 'AI'>('All');
+  const [projects, setProjects] = useState<Project[]>(PROJECTS);
+  const [activeCategory, setActiveCategory] = useState<'All' | 'UI Motion' | 'UI' | '3D Motion' | 'Visual'>('All');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [showWeChatQR, setShowWeChatQR] = useState(false);
   const [lang, setLang] = useState<Language>('en');
@@ -22,15 +23,15 @@ export default function App() {
 
   const categories = [
     { id: 'All', label: t.categories.All, icon: LayoutGrid },
-    { id: '3D', label: t.categories['3D'], icon: Box },
-    { id: 'Motion', label: t.categories.Motion, icon: Layers },
+    { id: 'UI Motion', label: t.categories['UI Motion'], icon: Layers },
     { id: 'UI', label: t.categories.UI, icon: Monitor },
-    { id: 'AI', label: t.categories.AI, icon: Cpu },
+    { id: '3D Motion', label: t.categories['3D Motion'], icon: Box },
+    { id: 'Visual', label: t.categories.Visual, icon: Cpu },
   ] as const;
 
   const filteredProjects = activeCategory === 'All' 
-    ? PROJECTS 
-    : PROJECTS.filter(p => p.category === activeCategory);
+    ? projects 
+    : projects.filter(p => p.category === activeCategory);
 
   return (
     <div className="min-h-screen selection:bg-white selection:text-black relative">
@@ -49,46 +50,51 @@ export default function App() {
 
       <main className="relative z-10">
         {/* Hero Section */}
-        <section className="min-h-screen flex items-center px-4 max-w-[1600px] mx-auto">
+        <section className="min-h-screen flex flex-col justify-between pt-32 pb-16 md:pb-24 px-4 max-w-[1600px] mx-auto">
+          {/* Top category label */}
+          <div>
+            <span className="text-xs uppercase tracking-[0.4em] text-white/40 font-medium block">
+              Creative Portfolio
+            </span>
+          </div>
+
+          {/* Centered big display title */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full"
+            className="my-auto py-12 md:py-20"
           >
-            <span className="text-xs uppercase tracking-[0.4em] text-white/40 font-medium mb-8 block">
-              Creative Portfolio
+            <span className="text-2xl md:text-3xl font-light tracking-[0.25em] text-white/50 block mb-6 uppercase">
+              WELCOME TO
             </span>
-            <h1 className={`text-5xl md:text-[8.5rem] font-black uppercase mb-16 ${lang === 'en' ? 'tracking-tight leading-[1.05]' : 'tracking-normal leading-[1.2]'}`}>
-              {lang === 'en' ? (
-                <>
-                  WELCOME TO <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white/50 to-white/20">DODONG</span> <br />
-                  DESIGN SPACE
-                </>
-              ) : (
-                <>
-                  欢迎来到 <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white/50 to-white/20">DODONG</span> <br />
-                  设计空间
-                </>
-              )}
+            <h1 className="text-6xl md:text-[9.5rem] font-black tracking-tight leading-[0.95] uppercase">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white/80 to-white/30">
+                DO STUDIO
+              </span>
             </h1>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mt-12 md:mt-20">
-              <p className={`text-lg text-white/60 max-w-md leading-relaxed ${lang === 'zh' ? 'tracking-wide' : ''}`}>
-                {t.hero.subtitle}
-              </p>
-              <motion.a
-                href="#work"
-                whileHover={{ x: 10 }}
-                className="flex items-center space-x-4 group"
-              >
-                <span className="text-sm uppercase tracking-widest font-semibold">{t.nav.work}</span>
-                <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300">
-                  <ArrowRight size={18} />
-                </div>
-              </motion.a>
-            </div>
+          </motion.div>
+
+          {/* Bottom aligned subtitle & call-to-action */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col md:flex-row md:items-end justify-between gap-8 pt-8 border-t border-white/5"
+          >
+            <p className={`text-lg text-white/60 max-w-lg leading-relaxed ${lang === 'zh' ? 'tracking-wide' : ''}`}>
+              {t.hero.subtitle}
+            </p>
+            <motion.a
+              href="#work"
+              whileHover={{ x: 10 }}
+              className="flex items-center space-x-4 group self-start md:self-auto"
+            >
+              <span className="text-sm uppercase tracking-widest font-semibold">{t.nav.work}</span>
+              <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300">
+                <ArrowRight size={18} />
+              </div>
+            </motion.a>
           </motion.div>
         </section>
 
@@ -140,6 +146,7 @@ export default function App() {
                   project={project} 
                   index={index} 
                   onClick={setSelectedProject}
+                  lang={lang}
                 />
               ))}
             </AnimatePresence>
@@ -150,33 +157,32 @@ export default function App() {
           project={selectedProject} 
           onClose={() => setSelectedProject(null)} 
           lang={lang}
+          onUpdateProject={(updated) => {
+            setProjects(prev => prev.map(p => p.id === updated.id ? updated : p));
+            setSelectedProject(updated);
+          }}
         />
 
         {/* About Section */}
         <section id="about" className="py-32 md:py-48 px-4 bg-brand-gray/30">
           <div className="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="aspect-square bg-brand-gray overflow-hidden"
-            >
-              <img 
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974&auto=format&fit=crop" 
-                alt="Profile"
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-              />
-            </motion.div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="aspect-square bg-brand-gray overflow-hidden rounded-2xl"
+              >
+                <img 
+                  src="https://ais-dev-ftzcxlcebkmcjvdvmfztrw-466561077391.us-east1.run.app/api/attachments/466561077391_ais-dev-ftzcxlcebkmcjvdvmfztrw_1742384077676_image.png" 
+                  alt="Zhao Weidong"
+                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                />
+              </motion.div>
             
             <div>
               <h2 className="text-xs uppercase tracking-[0.4em] text-white/40 font-medium mb-12">{t.about.title}</h2>
               <p className={`text-3xl md:text-4xl font-light mb-10 ${lang === 'en' ? 'leading-snug' : 'leading-relaxed tracking-wide'}`}>
-                {lang === 'en' ? (
-                  <>We believe in the power of <span className="font-serif italic">restraint</span>. Every pixel, every line, and every interaction is intentional.</>
-                ) : (
-                  <>{t.about.p1}</>
-                )}
+                {t.about.p1}
               </p>
               <p className={`text-lg text-white/60 mb-16 ${lang === 'en' ? 'leading-relaxed' : 'leading-loose tracking-wide'}`}>
                 {t.about.p2}
@@ -185,19 +191,19 @@ export default function App() {
                 <div>
                   <h4 className="text-xs uppercase tracking-widest text-white/40 mb-4">{t.about.services}</h4>
                   <ul className="text-sm space-y-2 text-white/80">
-                    <li>{lang === 'en' ? 'Art Direction' : '艺术指导'}</li>
+                    <li>{lang === 'en' ? 'Motion Design' : '动效设计'}</li>
+                    <li>{lang === 'en' ? '3D Visuals' : '3D 视觉'}</li>
                     <li>{lang === 'en' ? 'UI/UX Design' : 'UI/UX 设计'}</li>
-                    <li>{lang === 'en' ? 'Brand Strategy' : '品牌策略'}</li>
-                    <li>{lang === 'en' ? 'Motion Design' : '动态设计'}</li>
+                    <li>{lang === 'en' ? 'AIGC Innovation' : 'AI 创新应用'}</li>
                   </ul>
                 </div>
                 <div>
                   <h4 className="text-xs uppercase tracking-widest text-white/40 mb-4">{t.about.awards}</h4>
                   <ul className="text-sm space-y-2 text-white/80">
-                    <li>Awwwards SOTD</li>
-                    <li>FWA of the Month</li>
-                    <li>CSS Design Awards</li>
-                    <li>Behance Featured</li>
+                    <li>{lang === 'en' ? 'Pinduoduo Senior Designer' : '拼多多 资深设计师'}</li>
+                    <li>{lang === 'en' ? 'Ximalaya Senior 3D' : '喜马拉雅 高级3D动效'}</li>
+                    <li>{lang === 'en' ? 'Baitu Network 3D' : '白兔网络 3D动效'}</li>
+                    <li>{lang === 'en' ? 'IHDT C4D Certified' : 'IHDT C4D 系统认证'}</li>
                   </ul>
                 </div>
               </div>
@@ -214,16 +220,19 @@ export default function App() {
           >
             <h2 className="text-xs uppercase tracking-[0.4em] text-white/40 font-medium mb-12">{t.contact.title}</h2>
             <a 
-              href="mailto:hello@aura.design" 
+              href="mailto:825324414@qq.com" 
               className="text-4xl md:text-7xl font-light tracking-tighter hover:text-white/60 transition-colors"
             >
-              hello@aura.design
+              825324414@qq.com
             </a>
+            <p className="mt-8 text-white/40 tracking-widest uppercase text-xs">
+              {lang === 'en' ? 'Phone' : '电话'}: 17766053112
+            </p>
             
             <div className="mt-24 flex justify-center space-x-12">
               {[
-                { icon: ExternalLink, label: lang === 'en' ? 'Zcool' : '站酷', href: '#' },
-                { icon: ExternalLink, label: 'Behance', href: '#' },
+                { icon: ExternalLink, label: lang === 'en' ? 'Zcool' : '站酷', href: 'https://www.zcool.com.cn/u/16926202' },
+                { icon: ExternalLink, label: lang === 'en' ? 'Portfolio' : '作品集', href: 'https://tvkba2gvy7q.feishu.cn/wiki/Lww8woVS0iIqvFkZj2zckjelnwf' },
                 { icon: MessageCircle, label: lang === 'en' ? 'WeChat' : '微信', isWeChat: true }
               ].map((social) => (
                 <div key={social.label} className="relative">
@@ -284,7 +293,7 @@ export default function App() {
       <footer className="py-12 px-4 border-t border-white/5">
         <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-xs text-white/20 uppercase tracking-widest">
-            © 2024 Aura Design Studio. All rights reserved.
+            © 2024 Zhao Weidong. All rights reserved.
           </p>
           <div className="flex space-x-8 text-xs text-white/20 uppercase tracking-widest">
             <a href="#" className="hover:text-white transition-colors">Privacy</a>

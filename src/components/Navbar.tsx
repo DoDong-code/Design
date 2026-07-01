@@ -34,7 +34,7 @@ export default function Navbar({ onNavigate, lang, setLang }: NavbarProps) {
           animate={{ opacity: 1, x: 0 }}
           className="text-xl font-bold tracking-tighter hover:text-white/60 transition-colors"
         >
-          AURA<span className="text-white/40">.</span>
+          DO STUDIO<span className="text-white/40">.</span>
         </motion.button>
 
         <div className="hidden md:flex items-center space-x-12">
