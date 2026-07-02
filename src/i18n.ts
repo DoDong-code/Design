@@ -7,7 +7,7 @@ export const translations = {
     },
     hero: {
       title: 'DO STUDIO',
-      subtitle: 'Crafting immersive experiences through 3D, Motion, and AI.',
+      subtitle: 'Senior motion designer skilled in UI, animation, 3D, branding, and AI-assisted design.\nLong-term experience in growth campaigns, interactive gifts, cross-border business, and marketing visuals, optimizing business outcomes from initial concept to deployment.',
     },
     categories: {
       All: 'All',
@@ -15,6 +15,7 @@ export const translations = {
       'UI': 'Growth UI',
       '3D Motion': '3D Motion',
       'Visual': 'Visual System',
+      'AI': 'AI Design',
     },
     contact: {
       title: 'Get in touch',
@@ -22,8 +23,8 @@ export const translations = {
     },
     about: {
       title: 'About Me',
-      p1: 'I am Zhao Weidong, a Senior Motion Designer with 8 years of experience in the internet industry.',
-      p2: 'My full-stack design capabilities cover UI, Motion, 3D, and Visual design. I specialize in driving business growth through design efficiency and innovation, particularly with AIGC. I have led teams of 3-5 people to achieve significant revenue growth in live streaming businesses.',
+      p1: 'With 8 years of digital design experience, I excel in breaking down complex business requirements into clear, actionable, and highly reusable visual systems.',
+      p2: 'My career spans across MG animation, interactive 3D broadcast gifts, UI motion, to design systems and growth UI—covering creative ideation, production, specs, deployment, and data analytics. I have led teams of 3-5 designers to multiply live stream revenue, and built strong collaboration experiences in high-intensity projects at Pinduoduo and Ximalaya.',
       services: 'Expertise',
       awards: 'Experience',
     },
@@ -45,7 +46,7 @@ export const translations = {
     },
     hero: {
       title: 'DO STUDIO',
-      subtitle: '深耕动效、3D 与 UI 领域，用全栈设计能力与 AI 创新驱动业务增长。',
+      subtitle: '资深动效设计师，具备 UI、动效、3D、视觉与 AI 辅助设计能力。\n长期参与增长活动、直播礼物、跨境业务和运营视觉，从创意到上线持续优化业务表现。',
     },
     categories: {
       All: '全部',
@@ -53,6 +54,7 @@ export const translations = {
       'UI': '增长 UI',
       '3D Motion': '3D 动效',
       'Visual': '视觉体系',
+      'AI': 'AI 辅助',
     },
     contact: {
       title: '保持联系',
@@ -60,8 +62,8 @@ export const translations = {
     },
     about: {
       title: '个人介绍',
-      p1: '我是赵魏东，一名拥有 8 年互联网行业经验的资深动效设计师。',
-      p2: '全栈设计能力覆盖 UI / 动效 / 3D / 视觉。擅长通过设计提效与 AI 创新（AIGC）驱动业务增长。曾带领 3-5 人团队使直播业务营收实现提升多倍增长。工作履历涵盖从 MG 动画到 3D 直播礼物，再到 UI 动效的全链路设计经验。',
+      p1: '拥有 8 年互联网设计经验，擅长把复杂业务拆解成清晰、可执行、可复用的视觉方案。',
+      p2: '工作履历从 MG 动画、3D 动态直播礼物、UI 动效，到视觉与增长 UI，覆盖创意、制作、规范、上线和数据回收。曾带领 3-5 人团队推动直播业务营收多倍增长，并在拼多多、喜马拉雅等业务中沉淀了高强度项目协作经验。',
       services: '核心技能',
       awards: '工作经历',
     },

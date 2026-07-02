@@ -7,17 +7,29 @@ import { motion, AnimatePresence } from 'motion/react';
 import Navbar from './components/Navbar';
 import ProjectCard from './components/ProjectCard';
 import ProjectModal from './components/ProjectModal';
+import BorderGlow from './components/BorderGlow';
 import { PROJECTS, type Project } from './constants';
-import { ArrowRight, Instagram, Twitter, Linkedin, Box, Layers, Monitor, Cpu, LayoutGrid, MessageCircle, ExternalLink } from 'lucide-react';
+import Aurora from './components/Aurora';
+import { ArrowRight, Instagram, Twitter, Linkedin, Box, Layers, Monitor, Cpu, LayoutGrid, MessageCircle, ExternalLink, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { translations, type Language } from './i18n';
+import avatarImg from './assets/avatar/avatar.png';
 
 export default function App() {
   const [projects, setProjects] = useState<Project[]>(PROJECTS);
-  const [activeCategory, setActiveCategory] = useState<'All' | 'UI Motion' | 'UI' | '3D Motion' | 'Visual'>('All');
+  const [activeCategory, setActiveCategory] = useState<'All' | 'UI Motion' | 'UI' | '3D Motion' | 'Visual' | 'AI'>('All');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [showWeChatQR, setShowWeChatQR] = useState(false);
   const [lang, setLang] = useState<Language>('en');
+  const [avatarIndex, setAvatarIndex] = useState(0);
+
+  const avatarSources = [
+    avatarImg,
+    '/api/attachments/466561077391_ais-dev-ftzcxlcebkmcjvdvmfztrw_1742384077676_image.png',
+    'https://ais-dev-ftzcxlcebkmcjvdvmfztrw-466561077391.us-east1.run.app/api/attachments/466561077391_ais-dev-ftzcxlcebkmcjvdvmfztrw_1742384077676_image.png',
+    '/avatar.jpg',
+    '/avatar.jpeg'
+  ];
 
   const t = translations[lang];
 
@@ -27,6 +39,7 @@ export default function App() {
     { id: 'UI', label: t.categories.UI, icon: Monitor },
     { id: '3D Motion', label: t.categories['3D Motion'], icon: Box },
     { id: 'Visual', label: t.categories.Visual, icon: Cpu },
+    { id: 'AI', label: t.categories.AI, icon: Sparkles },
   ] as const;
 
   const filteredProjects = activeCategory === 'All' 
@@ -35,12 +48,20 @@ export default function App() {
 
   return (
     <div className="min-h-screen selection:bg-white selection:text-black relative">
-      {/* Cool Background */}
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-900/20 rounded-full blur-[120px] animate-blob" />
-        <div className="absolute top-[20%] right-[-5%] w-[35%] h-[35%] bg-blue-900/20 rounded-full blur-[120px] animate-blob animation-delay-2000" />
-        <div className="absolute bottom-[-10%] left-[20%] w-[45%] h-[45%] bg-emerald-900/10 rounded-full blur-[120px] animate-blob animation-delay-4000" />
+      {/* Cool Background with WebGL Aurora */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-[#030303]">
+        <div className="absolute inset-0 opacity-40 mix-blend-screen">
+          <Aurora
+            colorStops={["#1c4bc2", "#B497CF", "#6d28d9"]}
+            blend={0.5}
+            amplitude={1.2}
+            speed={0.35}
+          />
+        </div>
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-900/10 rounded-full blur-[120px] animate-blob" />
+        <div className="absolute top-[20%] right-[-5%] w-[35%] h-[35%] bg-blue-900/10 rounded-full blur-[120px] animate-blob animation-delay-2000" />
       </div>
+
 
       <Navbar 
         onNavigate={() => setSelectedProject(null)} 
@@ -82,7 +103,7 @@ export default function App() {
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-col md:flex-row md:items-end justify-between gap-8 pt-8 border-t border-white/5"
           >
-            <p className={`text-lg text-white/60 max-w-lg leading-relaxed ${lang === 'zh' ? 'tracking-wide' : ''}`}>
+            <p className={`text-lg text-white/60 max-w-3xl leading-relaxed whitespace-pre-line ${lang === 'zh' ? 'tracking-wide' : ''}`}>
               {t.hero.subtitle}
             </p>
             <motion.a
@@ -102,27 +123,36 @@ export default function App() {
         <section id="work" className="py-24 md:py-32 px-4 max-w-[1600px] mx-auto">
           <div className="mb-24">
             <h2 className="text-xs uppercase tracking-[0.4em] text-white/40 font-medium mb-12">{lang === 'en' ? 'Selected Works' : '精选作品'}</h2>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div 
+              className="flex md:grid md:grid-cols-6 gap-3 md:gap-4 overflow-x-auto md:overflow-x-visible pb-4 md:pb-0 scrollbar-none -mx-4 px-4 md:mx-0 md:px-0"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
               {categories.map((cat) => (
                 <motion.button
                   key={cat.id}
                   whileHover={{ y: -5 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setActiveCategory(cat.id)}
-                  className={`relative flex flex-col items-center justify-center p-8 rounded-2xl border transition-all duration-500 overflow-hidden group ${
-                    activeCategory === cat.id 
-                      ? 'bg-white text-black border-white' 
-                      : 'bg-white/5 text-white/40 border-white/10 hover:border-white/30 hover:bg-white/10'
-                  }`}
+                  className="relative flex-shrink-0 min-w-[110px] md:min-w-0 flex-1 group"
                 >
-                  <cat.icon className={`mb-4 transition-transform duration-500 ${activeCategory === cat.id ? 'scale-110' : 'group-hover:scale-110'}`} size={24} />
-                  <span className="text-xs uppercase tracking-widest font-bold">{cat.label}</span>
-                  {activeCategory === cat.id && (
-                    <motion.div 
-                      layoutId="active-bg"
-                      className="absolute inset-0 bg-white -z-10"
-                    />
-                  )}
+                  <BorderGlow
+                    className="w-full h-full"
+                    borderRadius={16}
+                    backgroundColor={activeCategory === cat.id ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.03)'}
+                    glowColor={activeCategory === cat.id ? '250 100% 85%' : '210 100% 70%'}
+                    glowRadius={activeCategory === cat.id ? 40 : 25}
+                    edgeSensitivity={30}
+                    glowIntensity={activeCategory === cat.id ? 2.0 : 1.2}
+                    colors={['#3b82f6', '#8b5cf6', '#ec4899']}
+                    fillOpacity={0}
+                  >
+                    <div className={`flex flex-col items-center justify-center py-5 px-6 md:py-8 md:px-4 w-full h-full transition-colors duration-300 ${
+                      activeCategory === cat.id ? 'text-black' : 'text-white/40 group-hover:text-white'
+                    }`}>
+                      <cat.icon className={`mb-3 md:mb-4 transition-transform duration-500 ${activeCategory === cat.id ? 'scale-110' : 'group-hover:scale-110'}`} size={22} />
+                      <span className="text-[10px] md:text-xs uppercase tracking-widest font-bold text-center block whitespace-nowrap">{cat.label}</span>
+                    </div>
+                  </BorderGlow>
                 </motion.button>
               ))}
             </div>
@@ -170,12 +200,17 @@ export default function App() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                className="aspect-square bg-brand-gray overflow-hidden rounded-2xl"
+                className="w-2/3 max-w-[380px] aspect-square bg-brand-gray overflow-hidden rounded-full mx-auto border-2 border-white/10 shadow-2xl"
               >
                 <img 
-                  src="https://ais-dev-ftzcxlcebkmcjvdvmfztrw-466561077391.us-east1.run.app/api/attachments/466561077391_ais-dev-ftzcxlcebkmcjvdvmfztrw_1742384077676_image.png" 
+                  src={avatarSources[avatarIndex]} 
                   alt="Zhao Weidong"
-                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                  onError={() => {
+                    if (avatarIndex < avatarSources.length - 1) {
+                      setAvatarIndex(avatarIndex + 1);
+                    }
+                  }}
+                  className="w-full h-full object-cover hover:scale-105 transition-all duration-700"
                 />
               </motion.div>
             
@@ -238,17 +273,19 @@ export default function App() {
                 <div key={social.label} className="relative">
                   {social.isWeChat ? (
                     <>
-                      <button 
+                      <motion.button 
                         onClick={() => setShowWeChatQR(!showWeChatQR)}
+                        whileHover={{ y: -4, scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                         className="group flex flex-col items-center space-y-4"
                       >
-                        <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-white/40 transition-colors">
-                          <social.icon size={20} />
+                        <div className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center group-hover:border-white/40 group-hover:bg-white/10 transition-all duration-300">
+                          <social.icon size={20} className="group-hover:scale-110 transition-transform duration-300" />
                         </div>
                         <span className="text-[10px] uppercase tracking-widest text-white/40 group-hover:text-white transition-colors">
                           {social.label}
                         </span>
-                      </button>
+                      </motion.button>
                       <AnimatePresence>
                         {showWeChatQR && (
                           <motion.div 
@@ -271,17 +308,21 @@ export default function App() {
                       </AnimatePresence>
                     </>
                   ) : (
-                    <a 
+                    <motion.a 
                       href={social.href} 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ y: -4, scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                       className="group flex flex-col items-center space-y-4"
                     >
-                      <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-white/40 transition-colors">
-                        <social.icon size={20} />
+                      <div className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center group-hover:border-white/40 group-hover:bg-white/10 transition-all duration-300">
+                        <social.icon size={20} className="group-hover:scale-110 transition-transform duration-300" />
                       </div>
                       <span className="text-[10px] uppercase tracking-widest text-white/40 group-hover:text-white transition-colors">
                         {social.label}
                       </span>
-                    </a>
+                    </motion.a>
                   )}
                 </div>
               ))}

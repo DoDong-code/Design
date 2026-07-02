@@ -274,7 +274,7 @@ export default function ProjectModal({ project, onClose, lang, onUpdateProject }
                       <img 
                         src={displayUrl} 
                         alt={`${lang === 'en' ? project.titleEn : project.titleZh} detail ${idx + 1}`}
-                        referrerPolicy="no-referrer"
+                        referrerPolicy={displayUrl.includes('attachments/') ? undefined : 'no-referrer'}
                         className="w-full h-auto max-h-[85vh] object-contain block"
                       />
                     )}

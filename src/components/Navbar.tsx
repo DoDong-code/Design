@@ -32,7 +32,9 @@ export default function Navbar({ onNavigate, lang, setLang }: NavbarProps) {
           }}
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="text-xl font-bold tracking-tighter hover:text-white/60 transition-colors"
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          className="text-xl font-bold tracking-tighter hover:text-white transition-colors"
         >
           DO STUDIO<span className="text-white/40">.</span>
         </motion.button>
@@ -50,7 +52,9 @@ export default function Navbar({ onNavigate, lang, setLang }: NavbarProps) {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="text-sm uppercase tracking-widest font-medium text-white/60 hover:text-white transition-colors"
+              whileHover={{ y: -2, scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="text-sm uppercase tracking-widest font-medium text-white/60 hover:text-white transition-all duration-200"
             >
               {item.label}
             </motion.a>
@@ -61,7 +65,9 @@ export default function Navbar({ onNavigate, lang, setLang }: NavbarProps) {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="flex items-center space-x-2 text-xs font-bold tracking-widest text-white/40 hover:text-white transition-colors border border-white/10 px-3 py-1.5 rounded-full"
+            whileHover={{ scale: 1.08, borderColor: 'rgba(255, 255, 255, 0.4)', backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
+            whileTap={{ scale: 0.92 }}
+            className="flex items-center space-x-2 text-xs font-bold tracking-widest text-white/40 hover:text-white transition-all duration-200 border border-white/10 px-3 py-1.5 rounded-full"
           >
             <Globe size={12} />
             <span>{lang === 'en' ? 'EN' : '中'}</span>
@@ -69,18 +75,22 @@ export default function Navbar({ onNavigate, lang, setLang }: NavbarProps) {
         </div>
 
         <div className="flex items-center space-x-6 md:hidden">
-          <button
+          <motion.button
             onClick={toggleLang}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             className="text-xs font-bold tracking-widest text-white/40 hover:text-white transition-colors border border-white/10 px-2 py-1 rounded-full"
           >
             {lang === 'en' ? 'EN' : '中'}
-          </button>
-          <button 
+          </motion.button>
+          <motion.button 
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             className="text-white"
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? <X /> : <Menu />}
-          </button>
+          </motion.button>
         </div>
       </div>
 
